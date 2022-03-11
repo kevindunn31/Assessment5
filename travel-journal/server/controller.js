@@ -1,4 +1,13 @@
+const Sequelize = require('sequelize')
 
+const sequelize = new Sequelize(process.env.CONNECTION_STRING, {
+    dialect: 'postgres',
+  dialectOptions: {
+      ssl: {
+          rejectUnauthorized: false
+      }
+    }
+});
 
 module.exports = {
     seed: (req, res) => {
@@ -10,8 +19,69 @@ module.exports = {
                 country_id serial primary key, 
                 name varchar
             );
+    create table cities (
+        city_id serial primary key, 
+        name varchar(100),
+        rating integer,
+        country_id integer references country_id(countries)
+    );
 
-            *****YOUR CODE HERE*****
+
+getCountries: (req, res) => {
+    sequlize.query(
+    SELECT * FROM country_id AS c 
+    JOIN name u country_id
+    )
+    .then(dbRes => res.status(200).send(dbRes[0]))
+    .catch(err => console.log(err))
+},  
+
+createCity: (req,res) => {
+    let {name, rating, countryId} = req.body
+
+    sequelize.query(
+        INSERT INTO city_id 
+        VALUES(name, rating, countryID)
+        RETURNING *
+    )
+    .then(dbRes => res.status(200).send(dbRes[0]))
+    .catch(err => console.log(err))
+},
+
+getCities: (req, res) => {
+    sequelize.query(
+        SELECT * FROM city_id
+        WHERE country_id
+        ORDER BY rating ASC
+        JOIN city_name ON country_id
+    )
+    .then(dbRes => res.status(200).send(dbRes[0]))
+    .catch(err => console.log(err))
+};
+
+deleteCity: (req, res) => {
+    let deleteCity {city: req.body.city}
+    sequlize.query(
+        SELECT * FROM city_id
+
+    )
+    .then(dbRes => res.status(200).send(dbRes[0]))
+    .catch(err => console.log(err))
+},
+
+//Extra Credit
+
+getCities: (req, res) => {
+    sequelize.query(
+        SELECT * FROM city_id
+        WHERE country_id
+        ORDER BY rating ASC [2]
+        JOIN city_name ON country_id
+    )
+    .then(dbRes => res.status(200).send(dbRes[0]))
+    .catch(err => console.log(err))
+};
+  
 
             insert into countries (name)
             values ('Afghanistan'),
